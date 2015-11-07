@@ -9,6 +9,7 @@
 .settings
 
 .gradle/
+gradle/
 build/
 target/
 classes/
