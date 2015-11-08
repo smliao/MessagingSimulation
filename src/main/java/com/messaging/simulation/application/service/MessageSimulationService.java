@@ -18,4 +18,8 @@ public class MessageSimulationService {
     public MessageSimulation create(MessageSimulation messageSimulation) {
         return messageSimulationRepository.save(messageSimulation);
     }
+
+    public MessageSimulation findById(String id){
+        return messageSimulationRepository.findOne(id);
+    }
 }

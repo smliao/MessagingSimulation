@@ -9,8 +9,6 @@ import java.util.Map;
 @Data
 public class MessageSimulationResponseResource {
 
-    private String id;
-
     private String username;
 
     private String text;
@@ -18,7 +16,6 @@ public class MessageSimulationResponseResource {
     private String expiration_date;
 
     public MessageSimulationResponseResource(MessageSimulation messageSimulation) {
-        this.id = messageSimulation.getId();
         this.username = messageSimulation.getUsername();
         this.text = messageSimulation.getText();
         this.expiration_date = messageSimulation.getText();
@@ -28,5 +25,9 @@ public class MessageSimulationResponseResource {
         Map<String, Object> result = new HashMap<>();
         result.put("id", messageSimulation.getId());
         return result;
+    }
+
+    public static MessageSimulationResponseResource toResource(MessageSimulation messageSimulation) {
+        return new MessageSimulationResponseResource(messageSimulation);
     }
 }

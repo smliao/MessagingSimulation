@@ -7,6 +7,9 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Document(collection = MessageSimulation.COLLECTION_NAME)
@@ -25,12 +28,18 @@ public class MessageSimulation {
 
     private String text;
 
-    private Integer timeout;
+    private String timeout;
 
-    public static MessageSimulation messageSimulation(String username, String text, Integer timeout){
+    public static MessageSimulation messageSimulation(String username, String text, Integer timeout) {
         return new MessageSimulation(UUID.randomUUID().toString(),
                 username,
                 text,
-                timeout);
+                getExpirationAge(timeout));
+    }
+
+    private static String getExpirationAge(Integer timeout) {
+        return LocalDateTime.now()
+                .plus(timeout, ChronoUnit.SECONDS)
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
