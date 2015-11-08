@@ -21,6 +21,8 @@ public class MessageSimulation {
 
     public static final String COLLECTION_NAME = "messageSimulation";
 
+    private static int DEFAULT_TIMEOUT = 60;
+
     @Id
     private String id;
 
@@ -31,6 +33,11 @@ public class MessageSimulation {
     private String expiration_date;
 
     public static MessageSimulation messageSimulation(String username, String text, Integer timeout) {
+
+        if (timeout == null) {
+            timeout = DEFAULT_TIMEOUT;
+        }
+
         return new MessageSimulation(UUID.randomUUID().toString(),
                 username,
                 text,

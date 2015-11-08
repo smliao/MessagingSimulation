@@ -2,6 +2,8 @@ package com.messaging.simulation.application.controller;
 
 import com.messaging.simulation.application.controller.path.MessageSimulationPaths;
 import com.messaging.simulation.application.service.MessageSimulationService;
+import com.messaging.simulation.application.view.MessageSimulationByUsernameResponseResource;
+import com.messaging.simulation.application.view.MessageSimulationIdResponseResource;
 import com.messaging.simulation.application.view.MessageSimulationRequestResource;
 import com.messaging.simulation.application.view.MessageSimulationResponseResource;
 import com.messaging.simulation.domain.MessageSimulation;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -36,7 +37,7 @@ public class MessageSimulationController {
     }
 
     @RequestMapping(value = MessageSimulationPaths.CHAT, method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> create(@RequestBody MessageSimulationRequestResource messageSimulationRequestResource) {
+    public ResponseEntity<MessageSimulationIdResponseResource> create(@RequestBody MessageSimulationRequestResource messageSimulationRequestResource) {
 
         log.info("Create new chat {}", messageSimulationRequestResource);
 
@@ -46,7 +47,7 @@ public class MessageSimulationController {
 
         log.info("Result {} saved in messageSimulationRepository", createdMessageSimulation);
 
-        Map<String, Object> result = MessageSimulationResponseResource.toCreateResource(createdMessageSimulation);
+        MessageSimulationIdResponseResource result = MessageSimulationIdResponseResource.toResource(createdMessageSimulation);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -68,7 +69,7 @@ public class MessageSimulationController {
     }
 
     @RequestMapping(value = MessageSimulationPaths.USER_NAME, method = RequestMethod.GET)
-    public ResponseEntity<Collection<Map<String, Object>>> findByUsername(@PathVariable String username) {
+    public ResponseEntity<Collection<MessageSimulationByUsernameResponseResource>> findByUsername(@PathVariable String username) {
 
         log.info("Find all chat with username : {}", username);
 
@@ -76,8 +77,9 @@ public class MessageSimulationController {
 
         log.info("Result of all {} chats: {}", username, messageSimulationList);
 
-        List<Map<String, Object>> result = MessageSimulationResponseResource.toListResource(messageSimulationList);
+        List<MessageSimulationByUsernameResponseResource> results =
+                MessageSimulationByUsernameResponseResource.toResource(messageSimulationList);
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 }
