@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -33,9 +35,9 @@ public class MessageSimulationController {
 
         MessageSimulation messageSimulation = messageSimulationRequestResource.toDomain();
 
-        messageSimulation = messageSimulationService.create(messageSimulation);
+        MessageSimulation createdMessageSimulation = messageSimulationService.create(messageSimulation);
 
-        Map<String, Object> result = MessageSimulationResponseResource.toCreateResource(messageSimulation);
+        Map<String, Object> result = MessageSimulationResponseResource.toCreateResource(createdMessageSimulation);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -46,6 +48,16 @@ public class MessageSimulationController {
         MessageSimulation messageSimulation = messageSimulationService.findById(id);
 
         MessageSimulationResponseResource result = MessageSimulationResponseResource.toResource(messageSimulation);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = MessageSimulationPaths.USER_NAME, method = RequestMethod.GET)
+    public ResponseEntity<Collection<Map<String, Object>>> findByUsername(@PathVariable String username){
+
+        List<MessageSimulation> messageSimulationList = messageSimulationService.findByUsername(username);
+
+        List<Map<String, Object>> result = MessageSimulationResponseResource.toListResource(messageSimulationList);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

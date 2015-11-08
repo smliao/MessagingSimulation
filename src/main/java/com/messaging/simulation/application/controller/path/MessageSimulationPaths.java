@@ -5,4 +5,5 @@ public interface MessageSimulationPaths {
     String TEST_PATH = "/";
     String CHAT = "/chat";
     String ID = CHAT + "/{id}";
+    String USER_NAME = "/chats/{username}";
 }

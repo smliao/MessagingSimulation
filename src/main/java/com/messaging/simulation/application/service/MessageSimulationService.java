@@ -5,6 +5,8 @@ import com.messaging.simulation.domain.repository.MessageSimulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MessageSimulationService {
 
@@ -21,5 +23,9 @@ public class MessageSimulationService {
 
     public MessageSimulation findById(String id){
         return messageSimulationRepository.findOne(id);
+    }
+
+    public List<MessageSimulation> findByUsername(String username){
+        return messageSimulationRepository.findByUsername(username);
     }
 }

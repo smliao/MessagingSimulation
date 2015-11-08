@@ -13,9 +13,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Document(collection = MessageSimulation.COLLECTION_NAME)
-@ToString
 @Getter
 @AllArgsConstructor
+@ToString
 @EqualsAndHashCode
 public class MessageSimulation {
 
@@ -28,7 +28,7 @@ public class MessageSimulation {
 
     private String text;
 
-    private String timeout;
+    private String expiration_date;
 
     public static MessageSimulation messageSimulation(String username, String text, Integer timeout) {
         return new MessageSimulation(UUID.randomUUID().toString(),
