@@ -7,6 +7,9 @@ import com.messaging.simulation.domain.repository.MessageSimulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +18,7 @@ public class MessageSimulationService {
     private MessageSimulationRepository messageSimulationRepository;
 
     private ExpiredMessageSimulationRepository expiredMessageSimulationRepository;
+    private static final String CURRENT_TIME = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));;
 
     @Autowired
     public MessageSimulationService(MessageSimulationRepository messageSimulationRepository, ExpiredMessageSimulationRepository expiredMessageSimulationRepository) {
@@ -29,10 +33,17 @@ public class MessageSimulationService {
 
     public MessageSimulation findById(String id) {
         MessageSimulation messageSimulation = messageSimulationRepository.findOne(id);
+
         if (messageSimulation == null) {
             ExpiredMessageSimulation expiredMessageSimulation = expiredMessageSimulationRepository.findOne(id);
             return MessageSimulation.from(expiredMessageSimulation);
         }
+
+        if(messageSimulation.getExpiration_date().compareTo(CURRENT_TIME) < 0){
+            messageSimulationRepository.delete(id);
+            expiredMessageSimulationRepository.save(ExpiredMessageSimulation.from(messageSimulation));
+        }
+
         return messageSimulation;
     }
 
@@ -43,6 +54,20 @@ public class MessageSimulationService {
             expiredMessageSimulationRepository.save(ExpiredMessageSimulation.from(returnedMessage));
         }
 
-        return returnedMessages;
+        List<MessageSimulation> results = filterUnexpiredMessages(returnedMessages);
+
+        return results;
+    }
+
+    private List<MessageSimulation> filterUnexpiredMessages(List<MessageSimulation> returnedMessages) {
+        List<MessageSimulation> results = new ArrayList<>();
+
+        for (MessageSimulation returnedMessage : returnedMessages) {
+            if (returnedMessage.getExpiration_date()
+                    .compareTo(CURRENT_TIME) > 0) {
+                    results.add(returnedMessage);
+            }
+        }
+        return results;
     }
 }

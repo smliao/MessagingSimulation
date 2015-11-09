@@ -7,6 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
@@ -59,12 +62,12 @@ public class MessageSimulationServiceTest {
                 "e03a4571-f4a5-46d9-9365-86988f64c0da",
                 "Bob",
                 "This is a message",
-                "2015-11-08 12:00:00");
+                LocalDateTime.now().plus(60, ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         MessageSimulation messageTwo = new MessageSimulation(
                 "f04a4571-f4a5-46d9-9365-86988f64c0da",
                 "Bob",
                 "This is a message also",
-                "2015-11-08 12:10:00");
+                LocalDateTime.now().plus(120, ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
         List<MessageSimulation> value = Arrays.asList(messageOne, messageTwo);
 
@@ -75,7 +78,35 @@ public class MessageSimulationServiceTest {
         List<MessageSimulation> messageSimulationList = messageSimulationService.findByUsername("Bob");
 
         //then
+        assertThat(messageSimulationList.size(), is(2));
         assertThat(messageSimulationList.get(0).getId(), is("e03a4571-f4a5-46d9-9365-86988f64c0da"));
         assertThat(messageSimulationList.get(1).getId(), is("f04a4571-f4a5-46d9-9365-86988f64c0da"));
+    }
+
+    @Test
+    public void shouldFindByUsernameAndReturnUnexpiredMessages() throws Exception {
+        //given
+        MessageSimulation messageOne = new MessageSimulation(
+                "e03a4571-f4a5-46d9-9365-86988f64c0da",
+                "Bob",
+                "This is a message",
+                "2015-11-08 12:00:00");
+        MessageSimulation messageTwo = new MessageSimulation(
+                "f04a4571-f4a5-46d9-9365-86988f64c0da",
+                "Bob",
+                "This is a message also",
+                LocalDateTime.now().plus(60, ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        List<MessageSimulation> messages = Arrays.asList(messageOne, messageTwo);
+
+        when(messageSimulationRepository.deleteByUsername("Bob"))
+                .thenReturn(messages);
+
+        //when
+        List<MessageSimulation> messageSimulationList = messageSimulationService.findByUsername("Bob");
+
+        //then
+        assertThat(messageSimulationList.size(), is(1));
+        assertThat(messageSimulationList.get(0).getId(), is("f04a4571-f4a5-46d9-9365-86988f64c0da"));
     }
 }
