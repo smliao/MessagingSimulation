@@ -18,7 +18,7 @@ public class MessageSimulationService {
     private MessageSimulationRepository messageSimulationRepository;
 
     private ExpiredMessageSimulationRepository expiredMessageSimulationRepository;
-    private static final String CURRENT_TIME = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));;
+    ;
 
     @Autowired
     public MessageSimulationService(MessageSimulationRepository messageSimulationRepository, ExpiredMessageSimulationRepository expiredMessageSimulationRepository) {
@@ -39,8 +39,8 @@ public class MessageSimulationService {
             return MessageSimulation.from(expiredMessageSimulation);
         }
 
-        if(messageSimulation.getExpiration_date().compareTo(CURRENT_TIME) < 0){
-            messageSimulationRepository.delete(id);
+        if(messageSimulation.getExpiration_date().compareTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) <= 0){
+            messageSimulationRepository.delete(messageSimulation);
             expiredMessageSimulationRepository.save(ExpiredMessageSimulation.from(messageSimulation));
         }
 
@@ -68,7 +68,7 @@ public class MessageSimulationService {
 
         for (MessageSimulation returnedMessage : returnedMessages) {
             if (returnedMessage.getExpiration_date()
-                    .compareTo(CURRENT_TIME) > 0) {
+                    .compareTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) > 0) {
                     results.add(returnedMessage);
             }
         }
