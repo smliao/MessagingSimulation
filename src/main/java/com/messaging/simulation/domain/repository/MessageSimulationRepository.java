@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageSimulationRepository extends MongoRepository<MessageSimulation, String> {
 
-    List<MessageSimulation> findByUsername(String username);
+    List<MessageSimulation> deleteByUsername(String username);
 }

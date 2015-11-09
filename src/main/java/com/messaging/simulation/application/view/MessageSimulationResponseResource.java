@@ -21,6 +21,9 @@ public class MessageSimulationResponseResource {
     }
 
     public static MessageSimulationResponseResource toResource(MessageSimulation messageSimulation) {
+        if (messageSimulation == null) {
+            return null;
+        }
         return new MessageSimulationResponseResource(messageSimulation);
     }
 }

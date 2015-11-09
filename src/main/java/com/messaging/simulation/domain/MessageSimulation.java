@@ -49,4 +49,17 @@ public class MessageSimulation {
                 .plus(timeout, ChronoUnit.SECONDS)
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+
+    public static MessageSimulation from(ExpiredMessageSimulation expiredMessageSimulation){
+
+        if(expiredMessageSimulation == null){
+            return null;
+        }
+
+        return new MessageSimulation(
+                expiredMessageSimulation.getId(),
+                expiredMessageSimulation.getUsername(),
+                expiredMessageSimulation.getText(),
+                expiredMessageSimulation.getExpiration_date());
+    }
 }

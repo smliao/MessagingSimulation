@@ -1,6 +1,7 @@
 package com.messaging.simulation.application.service;
 
 import com.messaging.simulation.domain.MessageSimulation;
+import com.messaging.simulation.domain.repository.ExpiredMessageSimulationRepository;
 import com.messaging.simulation.domain.repository.MessageSimulationRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +22,13 @@ public class MessageSimulationServiceTest {
     @Mock
     private MessageSimulationRepository messageSimulationRepository;
 
+    @Mock
+    private ExpiredMessageSimulationRepository expiredMessageSimulationRepository;
+
     @Before
     public void setUp() throws Exception {
         initMocks(this);
-        messageSimulationService = new MessageSimulationService(messageSimulationRepository);
+        messageSimulationService = new MessageSimulationService(messageSimulationRepository, expiredMessageSimulationRepository);
     }
 
     @Test
@@ -64,7 +68,7 @@ public class MessageSimulationServiceTest {
 
         List<MessageSimulation> value = Arrays.asList(messageOne, messageTwo);
 
-        when(messageSimulationRepository.findByUsername("Bob"))
+        when(messageSimulationRepository.deleteByUsername("Bob"))
                 .thenReturn(value);
 
         //when
