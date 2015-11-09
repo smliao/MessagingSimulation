@@ -47,6 +47,10 @@ public class MessageSimulationService {
         return messageSimulation;
     }
 
+    public void deleteAll(){
+        messageSimulationRepository.deleteAll();
+    }
+
     public List<MessageSimulation> findByUsername(String username) {
         List<MessageSimulation> returnedMessages = messageSimulationRepository.deleteByUsername(username);
 
