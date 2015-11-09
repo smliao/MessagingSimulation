@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class MessageSimulationController {
     }
 
     @RequestMapping(value = MessageSimulationPaths.CHAT, method = RequestMethod.POST)
-    public ResponseEntity<MessageSimulationIdResponseResource> create(@RequestBody MessageSimulationRequestResource messageSimulationRequestResource) {
+    public ResponseEntity<MessageSimulationIdResponseResource> create(@Valid @RequestBody MessageSimulationRequestResource messageSimulationRequestResource) {
 
         log.info("Create new chat {}", messageSimulationRequestResource);
 
