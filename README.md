@@ -6,7 +6,7 @@ Spring Boot Project
 - Mongo
 
 Setup 
-Install Java 8, gradle (gradle wrapper included), and MongoDB
+- Install Java 8, gradle (gradle wrapper included), and MongoDB
 
 To build project
 - "./gradlew build"
@@ -14,5 +14,5 @@ To build project
 To run project (embedded tomcat)
 - "./gradlew bootRun"
 
-To deploy jar file (change name inside of build.gradle)
+To deploy jar file (change name of deployable jar inside of build.gradle)
 - "java -jar build/libs/messaging-simulation-0.1.0.jar"
