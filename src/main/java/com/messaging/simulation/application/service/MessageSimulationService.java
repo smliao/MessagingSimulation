@@ -5,6 +5,7 @@ import com.messaging.simulation.domain.MessageSimulation;
 import com.messaging.simulation.domain.repository.ExpiredMessageSimulationRepository;
 import com.messaging.simulation.domain.repository.MessageSimulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,6 @@ public class MessageSimulationService {
     private MessageSimulationRepository messageSimulationRepository;
 
     private ExpiredMessageSimulationRepository expiredMessageSimulationRepository;
-    ;
 
     @Autowired
     public MessageSimulationService(MessageSimulationRepository messageSimulationRepository, ExpiredMessageSimulationRepository expiredMessageSimulationRepository) {
@@ -26,8 +26,8 @@ public class MessageSimulationService {
         this.expiredMessageSimulationRepository = expiredMessageSimulationRepository;
     }
 
+    @Cacheable(value = "messaging")
     public MessageSimulation create(MessageSimulation messageSimulation) {
-
         return messageSimulationRepository.save(messageSimulation);
     }
 
@@ -39,7 +39,7 @@ public class MessageSimulationService {
             return MessageSimulation.from(expiredMessageSimulation);
         }
 
-        if(messageSimulation.getExpiration_date().compareTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) <= 0){
+        if (messageSimulation.getExpiration_date().compareTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) <= 0) {
             messageSimulationRepository.delete(messageSimulation);
             expiredMessageSimulationRepository.save(ExpiredMessageSimulation.from(messageSimulation));
         }
@@ -47,7 +47,7 @@ public class MessageSimulationService {
         return messageSimulation;
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         messageSimulationRepository.deleteAll();
     }
 
@@ -69,7 +69,7 @@ public class MessageSimulationService {
         for (MessageSimulation returnedMessage : returnedMessages) {
             if (returnedMessage.getExpiration_date()
                     .compareTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))) > 0) {
-                    results.add(returnedMessage);
+                results.add(returnedMessage);
             }
         }
         return results;
