@@ -5,6 +5,8 @@ import com.messaging.simulation.domain.MessageSimulation;
 import com.messaging.simulation.domain.repository.ExpiredMessageSimulationRepository;
 import com.messaging.simulation.domain.repository.MessageSimulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -26,11 +28,16 @@ public class MessageSimulationService {
         this.expiredMessageSimulationRepository = expiredMessageSimulationRepository;
     }
 
-    @Cacheable(value = "messaging")
+    @CachePut(
+            value = "messaging",
+            key="{#result.id, #result.username}")
     public MessageSimulation create(MessageSimulation messageSimulation) {
         return messageSimulationRepository.save(messageSimulation);
     }
 
+    @Cacheable(
+            value = "messaging",
+            key = "#id")
     public MessageSimulation findById(String id) {
         MessageSimulation messageSimulation = messageSimulationRepository.findOne(id);
 
@@ -47,10 +54,9 @@ public class MessageSimulationService {
         return messageSimulation;
     }
 
-    public void deleteAll() {
-        messageSimulationRepository.deleteAll();
-    }
-
+    @Cacheable(
+            value = "messaging",
+            key = "#username")
     public List<MessageSimulation> findByUsername(String username) {
         List<MessageSimulation> returnedMessages = messageSimulationRepository.deleteByUsername(username);
 
@@ -61,6 +67,17 @@ public class MessageSimulationService {
         List<MessageSimulation> results = filterUnexpiredMessages(returnedMessages);
 
         return results;
+    }
+
+    public void deleteAll() {
+        messageSimulationRepository.deleteAll();
+    }
+
+    @CacheEvict(
+            value = "messaging",
+            allEntries = true)
+    public void evictCache(){
+
     }
 
     private List<MessageSimulation> filterUnexpiredMessages(List<MessageSimulation> returnedMessages) {

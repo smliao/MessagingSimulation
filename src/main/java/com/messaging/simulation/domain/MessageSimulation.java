@@ -50,9 +50,9 @@ public class MessageSimulation {
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public static MessageSimulation from(ExpiredMessageSimulation expiredMessageSimulation){
+    public static MessageSimulation from(ExpiredMessageSimulation expiredMessageSimulation) {
 
-        if(expiredMessageSimulation == null){
+        if (expiredMessageSimulation == null) {
             return null;
         }
 

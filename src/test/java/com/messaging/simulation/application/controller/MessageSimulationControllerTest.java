@@ -13,13 +13,13 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class MessageSimulationControllerTest extends AbstractControllerTest{
+public class MessageSimulationControllerTest extends AbstractControllerTest {
 
     @Autowired
     private MessageSimulationService messageSimulationService;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         super.setUp();
         messageSimulationService.deleteAll();
     }

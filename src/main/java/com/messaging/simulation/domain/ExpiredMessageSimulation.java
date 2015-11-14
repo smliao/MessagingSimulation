@@ -25,7 +25,7 @@ public class ExpiredMessageSimulation {
 
     private String expiration_date;
 
-    public static ExpiredMessageSimulation from(MessageSimulation messageSimulation){
+    public static ExpiredMessageSimulation from(MessageSimulation messageSimulation) {
         return new ExpiredMessageSimulation(
                 messageSimulation.getId(),
                 messageSimulation.getUsername(),
