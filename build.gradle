@@ -36,6 +36,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
